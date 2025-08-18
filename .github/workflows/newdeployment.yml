@@ -1,4 +1,4 @@
-name: 'Deploy to Azure App Service'
+name: 'New Deploy to Azure App Service'
 
 on:
   workflow_dispatch:
