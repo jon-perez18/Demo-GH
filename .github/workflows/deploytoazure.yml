@@ -37,7 +37,19 @@ jobs:
         path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
 
     - run: echo 'Publish output path ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-      
+
+    - name: Download published artifact
+      uses: actions/download-artifact@v4
+      with:
+          name: published-app
+          path: './downloaded-app'
+
+    - name: List contents of downloaded artifact
+      run: |
+        echo "Contents of downloaded-app:"
+        ls -R ./downloaded-app
+
+    
     - name: Deploy
       uses: Azure/webapps-deploy@v2
       with:
