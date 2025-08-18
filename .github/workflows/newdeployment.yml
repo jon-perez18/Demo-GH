@@ -1,0 +1,64 @@
+name: 'New Deploy to Azure App Service'
+
+on:
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: 'publish_output'
+  AZURE_WEBAPP_NAME: PSDeployDemo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Publish
+      run: dotnet publish YourProjectFolder/YourProject.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+    - name: Show publish output path
+      run: |
+        echo "Published to: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+        ls -R '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+    - name: Upload published artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: published-app
+        path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download published artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: published-app
+        path: './downloaded-app'
+
+    - name: List contents of downloaded artifact
+      run: |
+        echo "Contents of downloaded-app:"
+        ls -R ./downloaded-app
+
+    - name: Deploy to Azure Web App
+      uses: Azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        slot-name: 'development'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: './downloaded-app'
