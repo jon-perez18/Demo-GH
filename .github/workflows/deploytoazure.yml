@@ -35,6 +35,8 @@ jobs:
       with:
         name: published-app
         path: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+
+    - run: echo 'Publish output path ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
       
     - name: Deploy
       uses: Azure/webapps-deploy@v2
