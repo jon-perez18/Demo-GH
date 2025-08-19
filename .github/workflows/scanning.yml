@@ -14,6 +14,5 @@ jobs :
       - name: Scan for secrets (TruffleHog)
         uses: trufflesecurity/trufflehog@v3.90.5
         with:
-          scan: repository
-          entropy: true
-          base: ${{ github.event.pull_request.base.sha }}
+          path: .
+
