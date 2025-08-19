@@ -7,20 +7,12 @@ jobs :
   secret-scan:
     runs-on: ubuntu-latest
     steps:
-  
-      - name: Get latest TruffleHog version
-        id: get_version
-        run: |
-          latest=$(curl -s https://api.github.com/repos/trufflesecurity/trufflehog/releases/latest | jq -r .tag_name)
-          echo "Latest version: $latest"
-          echo "version=$latest" >> $GITHUB_OUTPUT
-      
+
       - name: Checkout code
         uses: actions/checkout@v3
         
       - name: Scan for secrets (TruffleHog)
-        # uses: trufflesecurity/trufflehog@v3.90.5
-        uses: trufflesecurity/trufflehog@${{ steps.get_version.outputs.version }}
+        uses: trufflesecurity/trufflehog@v3.90.5
         with:
           scan: repository
           entropy: true
