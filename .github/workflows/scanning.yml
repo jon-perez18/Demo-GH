@@ -1,6 +1,7 @@
 name: Secret Scan with TruffleHog
 
-on: [push, pull_request]
+on: 
+  workflow_dispatch:
 
 jobs :
   secret-scan:
