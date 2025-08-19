@@ -1,0 +1,15 @@
+name: Secret Scan with TruffleHog
+
+on: [push, pull_request]
+
+jobs :
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Scan for secrets (TruffleHog)
+        uses: trufflesecurity/trufflehog-actions-scan@v3
+        with:
+          scan: repository
+          entropy: true
+          base: ${{ github.event.pull_request.base.sha }}
