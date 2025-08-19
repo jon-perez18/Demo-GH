@@ -13,9 +13,10 @@ jobs:
     environment:
       name: staging-approval
 
-
     steps:
-    - uses: actions/checkout@v4
+    
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -31,10 +32,10 @@ jobs:
     - name: Publish
       run: dotnet publish PSCIDemo.csproj -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
 
-    - name: Show publish output path
-      run: |
-        echo "Published to: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
-        ls -R '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+    # - name: Show publish output path
+    #   run: |
+    #     echo "Published to: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+    #     ls -R '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
 
     - name: Upload published artifact
       uses: actions/upload-artifact@v4
@@ -47,16 +48,18 @@ jobs:
     needs: build
 
     steps:
+    
     - name: Download published artifact
       uses: actions/download-artifact@v4
       with:
         name: published-app
         path: './downloaded-app'
 
-    - name: List contents of downloaded artifact
-      run: |
-        echo "Contents of downloaded-app:"
-        ls -R ./downloaded-app
+    # - name: List contents of downloaded artifact
+    #   run: |
+    #     echo "Contents of downloaded-app:"
+    #     ls -R ./downloaded-app
+        
     - name: Deploy to Azure Web App
       uses: Azure/webapps-deploy@v2
       with:
