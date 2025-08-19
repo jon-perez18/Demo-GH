@@ -9,7 +9,7 @@ jobs :
     steps:
       - uses: actions/checkout@v3
       - name: Scan for secrets (TruffleHog)
-        uses: trufflesecurity/trufflehog-actions-scan@v3
+        uses: trufflesecurity/trufflehog@v3.90.5
         with:
           scan: repository
           entropy: true
